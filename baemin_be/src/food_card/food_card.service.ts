@@ -20,30 +20,27 @@ export class FoodCardService {
     }
   }
 
-  async findByKeyword(keyword: string) {
+  async findByKeyword(keyword: any, page: number) {
     try {
+
+      let index = (page - 1) * 5;
+
       const foodCardBySearch = await prisma.food_card.findMany({
         where: {
           food_name: {
-            contains: keyword
+            contains: keyword,
+            mode: 'insensitive'
           }
-        }
+        },
+        skip: index,
+        take: 5
       });
+
+      console.log('Search result: ', foodCardBySearch);
+
       return foodCardBySearch;
     } catch (error) {
-      throw new Error('Failed to get job');
+      throw new Error('Failed to get food cards');
     }
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} foodCard`;
-  }
-
-  update(id: number, updateFoodCardDto: UpdateFoodCardDto) {
-    return `This action updates a #${id} foodCard`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} foodCard`;
   }
 }

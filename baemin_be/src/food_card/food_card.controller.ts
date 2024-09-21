@@ -3,14 +3,12 @@ import {
   Get,
   Post,
   Body,
-  Patch,
-  Param,
-  Delete,
+  Query
 } from '@nestjs/common';
 import { FoodCardService } from './food_card.service';
 import { CreateFoodCardDto } from './dto/create-food_card.dto';
 import { UpdateFoodCardDto } from './dto/update-food_card.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('food_card')
 @Controller('food-card')
@@ -28,25 +26,7 @@ export class FoodCardController {
   }
 
   @Get('get-food-card-by-search')
-  findByKeyword(@Body('keyword') body: {keyword: string}) {
-    return this.foodCardService.findByKeyword(body.keyword);
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.foodCardService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateFoodCardDto: UpdateFoodCardDto,
-  ) {
-    return this.foodCardService.update(+id, updateFoodCardDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.foodCardService.remove(+id);
-  }
+findByKeyword(@Query('keyword') keyword: string, @Query('page') page: number) {
+  return this.foodCardService.findByKeyword(keyword, page);
+}
 }

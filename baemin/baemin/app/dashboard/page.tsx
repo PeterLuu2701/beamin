@@ -4,7 +4,7 @@ import HeaderNav from "@/components/headerNav";
 import ScrollBar from "@/components/scrollBar";
 import ScrollFood from "@/components/scrollFood";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useEffect, useState } from "react";
 

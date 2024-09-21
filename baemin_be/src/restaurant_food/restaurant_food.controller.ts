@@ -15,4 +15,8 @@ export class RestaurantFoodController {
     return this.restaurantFoodService.findAll();
   }
 
+  @Get('get-food-by-restaurant-id/:id')
+  findFoodByRestaurantId(@Param('id') id: string) {
+    return this.restaurantFoodService.findFoodByRestaurantId(+id);
+  }
 }

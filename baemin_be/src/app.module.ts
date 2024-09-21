@@ -9,12 +9,13 @@ import { AuthModule } from './auth/auth.module';
 import { RestaurantModule } from './restaurant/restaurant.module';
 import { RestaurantFoodModule } from './restaurant_food/restaurant_food.module';
 import { RestaurantMenuModule } from './restaurant_menu/restaurant_menu.module';
+import { OrdersModule } from './orders/orders.module';
 
 
 @Module({
   imports: [ConfigModule.forRoot({
     isGlobal: true
-  }), UsersModule, AppMenuModule, FoodCardModule, AuthModule, RestaurantModule, RestaurantFoodModule, RestaurantMenuModule],
+  }), UsersModule, AppMenuModule, FoodCardModule, AuthModule, RestaurantModule, RestaurantFoodModule, RestaurantMenuModule, OrdersModule],
   controllers: [AppController],
   providers: [AppService],
 })

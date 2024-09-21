@@ -16,4 +16,17 @@ export class RestaurantFoodService {
       throw new Error('Failed to retrieve restaurants');
     }
   }
+
+  async findFoodByRestaurantId(id: number) {
+    try {
+      const foodByRestaurantId = await prisma.restaurant_food.findMany({
+        where: {
+          restaurant_id: id
+        }
+      });
+      return foodByRestaurantId;
+    } catch (error) {
+      throw new Error('Failed to get foods');
+    }
+  }
 }
