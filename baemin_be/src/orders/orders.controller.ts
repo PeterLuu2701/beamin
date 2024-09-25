@@ -1,6 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { ApiProperty, ApiTags } from '@nestjs/swagger';
+import { Decimal } from '@prisma/client/runtime/library';
 
 export class ordersType {
   @ApiProperty()
@@ -13,19 +14,10 @@ export class ordersType {
   restaurant_id: number
 
   @ApiProperty()
-  food_name: string
-
-  @ApiProperty()
-  restaurant_name: string
-
-  @ApiProperty()
-  price: number
-
-  @ApiProperty()
   quantity: number
 
   @ApiProperty()
-  total: number
+  total: Decimal
 }
 
 @ApiTags('orders')
