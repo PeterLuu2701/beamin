@@ -18,6 +18,7 @@ import { Input } from "antd";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 interface RestaurantDetail {
   restaurant_id: string;
@@ -27,6 +28,11 @@ interface RestaurantDetail {
   close_time: string;
   min_price: string;
   max_price: string;
+}
+
+interface RestaurantMenu {
+  restaurant_id: string;
+  course_name: string;
 }
 
 export default function Home() {
@@ -40,29 +46,41 @@ export default function Home() {
     setIsActive(false);
   };
 
-  const params = useParams()
-  const restaurant_id = params?.restaurant_id as string;
+  const searchParams = useSearchParams();
+  const restaurant_id = searchParams ? searchParams.get("restaurant_id") : null;
 
   const [restaurantData, setRestaurantData] = useState<RestaurantDetail | null>(
     null
   );
+  const [restaurantMenu, setRestaurantMenu] = useState<RestaurantMenu[] | null>(
+    null
+  );
 
   useEffect(() => {
-    const fetchRestaurantDetail = async () => {
+    const fetchFoodDetail = async () => {
       if (restaurant_id) {
         try {
-          const response = await fetch(
+          // Fetch restaurant details
+          const restaurantResponse = await fetch(
             `http://localhost:8080/restaurant/get-restaurant-by-id/${restaurant_id}`
           );
-          const data: RestaurantDetail = await response.json();
-          setRestaurantData(data);
+          const restaurantData: RestaurantDetail =
+            await restaurantResponse.json();
+          setRestaurantData(restaurantData);
+
+          // Fetch restaurant menu
+          const menuResponse = await fetch(
+            `http://localhost:8080/restaurant-menu/get-restaurant-menu-by-restaurant-id/${restaurant_id}`
+          );
+          const menuData: RestaurantMenu[] = await menuResponse.json();
+          setRestaurantMenu(menuData);
         } catch (error) {
-          console.error("Failed to fetch restaurant details:", error);
+          console.error("Failed to fetch data:", error);
         }
       }
     };
 
-    fetchRestaurantDetail();
+    fetchFoodDetail();
   }, [restaurant_id]);
 
   return (
@@ -84,12 +102,7 @@ export default function Home() {
               <span className="text-[13px] text-[#187CAA]">
                 <a href="">Home</a>{" "}
                 <DoubleRightOutlined className="text-[10px]" />{" "}
-                <a href="">TP.HCM</a>{" "}
-                <DoubleRightOutlined className="text-[10px]" />{" "}
-                <a href="">
-                  {restaurantData?.restaurant_name}Gà Rán Jollibee - Nguyễn Văn
-                  Cừ
-                </a>{" "}
+                <a href="">{restaurantData?.restaurant_name}</a>{" "}
               </span>
               <div className="flex flex-row text-[11px] justify-start items-center mt-3">
                 <div className="bg-beamin text-white p-1 mr-2 cursor-pointer tracking-wider flex gap-1">
@@ -191,11 +204,13 @@ export default function Home() {
                   onMouseDown={handleMouseDown}
                   onMouseUp={handleMouseUp}
                 >
-                  SẢN PHẨM MỚI
+                  Menu
                 </li>
-                <li className="mt-2 px-1 w-fit">FAMILY COMBO</li>
-                <li className="mt-2 px-1 w-fit ">GÀ RÁN</li>
-                <li className="mt-2 px-1  w-fit">BURGER</li>
+                {restaurantMenu?.map((menuItem) => (
+                  <li className="mt-2 px-1 w-fit" key={menuItem.restaurant_id}>
+                    {menuItem.course_name}
+                  </li>
+                ))}
               </ul>
             </div>
             <div className="w-[50%] h-auto bg-white py-3 flex flex-col px-4">

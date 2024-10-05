@@ -3,14 +3,24 @@ import { CreateRestaurantMenuDto } from './dto/create-restaurant_menu.dto';
 import { UpdateRestaurantMenuDto } from './dto/update-restaurant_menu.dto';
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient
+const prisma = new PrismaClient();
 
 @Injectable()
 export class RestaurantMenuService {
-
   async findAll() {
     try {
-      const allRestaurantMenu = await prisma.restaurant_menu.findMany(); 
+      const allRestaurantMenu = await prisma.restaurant_menu.findMany();
+      return allRestaurantMenu;
+    } catch (error) {
+      throw new Error('Failed to retrieve restaurant menu');
+    }
+  }
+
+  async findRestaurantMenuByRestaurantId(id: number) {
+    try {
+      const allRestaurantMenu = await prisma.restaurant_menu.findMany({
+        where: { restaurant_id: id },
+      });
       return allRestaurantMenu;
     } catch (error) {
       throw new Error('Failed to retrieve restaurant menu');

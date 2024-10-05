@@ -14,5 +14,8 @@ export class RestaurantMenuController {
     return this.restaurantMenuService.findAll();
   }
 
-  
+  @Get('get-restaurant-menu-by-restaurant-id/:id')
+  findRestaurantMenuByRestaurantId(@Param('id') id: string) {
+    return this.restaurantMenuService.findRestaurantMenuByRestaurantId(+id);
+  }
 }

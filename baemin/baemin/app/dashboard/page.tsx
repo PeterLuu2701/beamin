@@ -166,7 +166,7 @@ export default function Home() {
             {filteredFood.map((item, index) => (
               <div
                 key={index}
-                onClick={() => router.push(`/detailfood/${item.restaurant_id}`)}
+                onClick={() => router.push(`/detailfood?restaurant_id=${item.restaurant_id}`)}
                 className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
               >
                 <a href="#">
