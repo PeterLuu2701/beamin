@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Param, Post, Put } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { ApiProperty, ApiTags } from '@nestjs/swagger';
 import { Decimal } from '@prisma/client/runtime/library';
@@ -28,5 +28,10 @@ export class OrdersController {
   @Post('create-order')
   order(@Body() createOrdersDto: ordersType) {
     return this.ordersService.order(createOrdersDto);
+  }
+
+  @Put('update_delivery/:orderId')
+  updateDelivery(@Param('orderId') orderId: string) {
+    return this.ordersService.updateDelivery(orderId);
   }
 }

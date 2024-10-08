@@ -38,6 +38,7 @@ model orders {
   restaurant_id      Int
   restaurant_food_id Int
   user_id            Int
+  delivery_status    String?         @default("pending") @db.VarChar(50)
   restaurant_food    restaurant_food @relation(fields: [restaurant_food_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   restaurant         restaurant      @relation(fields: [restaurant_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   users              users           @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -64,7 +65,8 @@ model restaurant_food {
   price              Decimal         @db.Decimal(10, 2)
   restaurant_id      Int
   restaurant_menu_id Int
-  img                String?         @db.VarChar(255)
+  img                String?         @db.VarChar(512)
+  inventory          Int?            @default(10)
   food_card          food_card[]
   orders             orders[]
   restaurant         restaurant      @relation(fields: [restaurant_id], references: [id], onDelete: NoAction, onUpdate: NoAction)

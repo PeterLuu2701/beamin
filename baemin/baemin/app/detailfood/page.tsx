@@ -35,6 +35,14 @@ interface RestaurantMenu {
   course_name: string;
 }
 
+interface RestaurantFood {
+  restaurant_id: string;
+  food_name: string;
+  ingredient: string;
+  price: number;
+  img: string;
+}
+
 export default function Home() {
   const [isActive, setIsActive] = useState(false);
 
@@ -53,6 +61,9 @@ export default function Home() {
     null
   );
   const [restaurantMenu, setRestaurantMenu] = useState<RestaurantMenu[] | null>(
+    null
+  );
+  const [restaurantFood, setRestaurantFood] = useState<RestaurantFood[] | null>(
     null
   );
 
@@ -74,6 +85,13 @@ export default function Home() {
           );
           const menuData: RestaurantMenu[] = await menuResponse.json();
           setRestaurantMenu(menuData);
+
+          const restaurantFoodResponse = await fetch(
+            `http://localhost:8080/restaurant-food/get-food-by-restaurant-id/${restaurant_id}`
+          );
+          const foodData: RestaurantFood[] =
+            await restaurantFoodResponse.json();
+          setRestaurantFood(foodData);
         } catch (error) {
           console.error("Failed to fetch data:", error);
         }
@@ -220,64 +238,39 @@ export default function Home() {
               <div className="flex flex-col w-full pl-1 gap-3">
                 <div className="font-medium">MÓN ĐANG GIẢM</div>
                 <div className="flex flex-col w-full gap-43 border-b">
-                  <div className="flex flex-row ">
-                    <div className="w-[15%] relative h-16">
-                      <Image
-                        layout="fill"
-                        objectFit="cover"
-                        src={"/images/Ga.png"}
-                        alt="s"
-                      ></Image>
-                    </div>
-                    <div className="w-[60%] flex flex-col gap-1 px-2">
-                      <span className="font-bold text-[#464646] ">
-                        Mua 2 Tặng 2 Gà Rán{" "}
-                      </span>
-                      <span className="text-wrap text-sm text-[#464646] ">
-                        Bao gồm: 4 Miếng Gà (Cay/Không Cay), 2 Nước Vừa. Đã bao
-                        gồm 2x Tương Cà, 1x Tương Ớt Ngọt, 1x Tương Ớt Tỏi
-                      </span>
-                    </div>
-                    <div className="w-[15%] flex justify-center items-center">
-                      <span className="text-[#0288d1] font-bold text-base">
-                        118.000đ
-                      </span>
-                    </div>
-                    <div className="w-[10%] flex justify-center items-center">
-                      <div className="h-6 w-6 rounded-md flex justify-center items-center bg-beamin text-white font-bold cursor-pointer hover:brightness-110 ">
-                        <PlusOutlined />
+                  {restaurantFood?.map((foodItem) => (
+                    <div
+                      className="flex flex-row "
+                      key={foodItem.restaurant_id}
+                    >
+                      <div className="w-[15%] relative h-16">
+                        <Image
+                          layout="fill"
+                          objectFit="cover"
+                          src={foodItem?.img}
+                          alt={foodItem?.food_name}
+                        ></Image>                        
+                      </div>
+                      <div className="w-[60%] flex flex-col gap-1 px-2">
+                        <span className="font-bold text-[#464646] ">
+                          {foodItem?.food_name}{" "}
+                        </span>
+                        <span className="text-wrap text-sm text-[#464646] ">
+                          {foodItem?.ingredient}{" "}
+                        </span>
+                      </div>
+                      <div className="w-[15%] flex justify-center items-center">
+                        <span className="text-[#0288d1] font-bold text-base">
+                          {foodItem?.price}{" "}
+                        </span>
+                      </div>
+                      <div className="w-[10%] flex justify-center items-center">
+                        <div className="h-6 w-6 rounded-md flex justify-center items-center bg-beamin text-white font-bold cursor-pointer hover:brightness-110 ">
+                          <PlusOutlined />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="flex flex-row ">
-                    <div className="w-[15%] relative h-16">
-                      <Image
-                        layout="fill"
-                        objectFit="cover"
-                        src={"/images/Ga.png"}
-                        alt="s"
-                      ></Image>
-                    </div>
-                    <div className="w-[60%] flex flex-col gap-1 px-2">
-                      <span className="font-bold text-[#464646] ">
-                        Mua 2 Tặng 2 Gà Rán{" "}
-                      </span>
-                      <span className="text-wrap text-sm text-[#464646] ">
-                        Bao gồm: 4 Miếng Gà (Cay/Không Cay), 2 Nước Vừa. Đã bao
-                        gồm 2x Tương Cà, 1x Tương Ớt Ngọt, 1x Tương Ớt Tỏi
-                      </span>
-                    </div>
-                    <div className="w-[15%] flex justify-center items-center">
-                      <span className="text-[#0288d1] font-bold text-base">
-                        118.000đ
-                      </span>
-                    </div>
-                    <div className="w-[10%] flex justify-center items-center">
-                      <div className="h-6 w-6 rounded-md flex justify-center items-center bg-beamin text-white font-bold cursor-pointer hover:brightness-110 ">
-                        <PlusOutlined />
-                      </div>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
             </div>

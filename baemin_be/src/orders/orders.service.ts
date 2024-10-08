@@ -17,12 +17,17 @@ export class OrdersService {
         select: {
           food_name: true,
           price: true,
+          inventory: true
         },
       });
 
       if (!foodDetails) {
         throw new Error('Invalid food item or restaurant');
         return 'Invalid food item or restaurant';
+      }
+
+      if (foodDetails.inventory <= 0) {
+        throw new Error('Insufficient stock for this item');
       }
 
       // Fetch restaurant details from the restaurant table
@@ -55,7 +60,35 @@ export class OrdersService {
         },
       });
 
+      await prisma.restaurant_food.update({
+        where: {
+          id: createOrdersDto.restaurant_food_id,
+        },
+        data: {
+          inventory: {
+            decrement: 1,
+          },
+        },
+      });
+
       return createOrder;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async updateDelivery(orderId: string) {
+    try {
+      const updateOrder = await prisma.orders.update({
+        where: {
+          id: Number(orderId), 
+        },
+        data: {
+          delivery_status: 'done',
+        },
+      });
+
+      return updateOrder;
     } catch (error) {
       throw new Error(error);
     }
